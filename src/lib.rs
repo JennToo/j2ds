@@ -2,5 +2,7 @@
 //! standard library
 
 mod clock;
+mod ring;
 
 pub use clock::Clock;
+pub use ring::{ElasticPopResult, ElasticRingBuffer, RingBuffer};
