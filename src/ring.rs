@@ -211,6 +211,7 @@ pub struct ElasticRingBuffer<T: Clone> {
 
 /// Indicates what happened when the queue tried to satisfy the
 /// request for elements
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Copy, Clone)]
 pub enum ElasticPopResult {
     /// The buffer is completely empty, and so the default value is
     /// used
@@ -323,8 +324,9 @@ fn test_elastic_exact() {
     erb.push_back_slice(&[1, 2, 3, 4]);
 
     let mut buf4 = [0; 4];
-    erb.pop_front_slice(&mut buf4);
+    let r = erb.pop_front_slice(&mut buf4);
     assert_eq!(buf4, [1, 2, 3, 4]);
+    assert_eq!(r, ElasticPopResult::Exact);
 }
 
 #[test]
@@ -335,8 +337,9 @@ fn test_elastic_empty() {
     let mut buf4 = [0; 4];
     erb.pop_front_slice(&mut buf4);
 
-    erb.pop_front_slice(&mut buf4);
+    let r = erb.pop_front_slice(&mut buf4);
     assert_eq!(buf4, [0, 0, 0, 0]);
+    assert_eq!(r, ElasticPopResult::Empty);
 }
 
 #[test]
@@ -345,9 +348,10 @@ fn test_elastic_upscale() {
 
     erb.push_back_slice(&[1, 2]);
     let mut buf4 = [0; 4];
-    erb.pop_front_slice(&mut buf4);
+    let r = erb.pop_front_slice(&mut buf4);
 
     assert_eq!(buf4, [1, 1, 2, 2]);
+    assert_eq!(r, ElasticPopResult::Upsampled(2));
 }
 
 #[test]
@@ -356,8 +360,9 @@ fn test_elastic_downscale() {
 
     erb.push_back_slice(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     let mut buf4 = [0; 4];
-    erb.pop_front_slice(&mut buf4);
+    let r = erb.pop_front_slice(&mut buf4);
 
     assert_eq!(buf4, [1, 3, 5, 7]);
     assert!(erb.len() <= erb.ideal_max);
+    assert_eq!(r, ElasticPopResult::Downsampled(8));
 }
