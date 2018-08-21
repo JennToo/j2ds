@@ -51,11 +51,17 @@ impl Clock {
     pub fn count(&self) -> u64 {
         self.count
     }
+
+    /// Return the period of the clock
+    pub fn period(&self) -> u64 {
+        self.period
+    }
 }
 
 #[test]
 fn test_clock() {
     let mut c = Clock::new(3);
+    assert_eq!(c.period(), 3);
 
     // First round
     assert_eq!(c.count(), 0);

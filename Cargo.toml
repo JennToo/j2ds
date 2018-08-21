@@ -1,6 +1,6 @@
 [package]
 name = "j2ds"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Jennifer Wilcox <jennifer@nitori.org>"]
 description = "A small collection of data structures not found in the standard library"
 license = "MIT"
