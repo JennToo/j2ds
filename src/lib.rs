@@ -4,5 +4,5 @@
 mod clock;
 mod ring;
 
-pub use clock::Clock;
+pub use clock::{next_timer_event, Clock, Timer, TimerEvent};
 pub use ring::{ElasticPopResult, ElasticRingBuffer, RingBuffer};
